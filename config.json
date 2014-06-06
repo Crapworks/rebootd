@@ -1,0 +1,5 @@
+{
+    "group": "mygroup",
+    "weeks": "1",
+    "redis": "my.redis.server"
+}
