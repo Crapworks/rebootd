@@ -22,7 +22,7 @@ class RebootDaemonTest(unittest.TestCase):
         """ Testing the SafeTransport class """
 
         self.assertTrue(self.reboot_daemon._get_uptime() > 0)
-        self.assertTrue(isinstance(self.reboot_daemon.time_to_reboot, bool))
+        self.assertTrue(isinstance(self.reboot_daemon._time_to_reboot, bool))
 
 
 if __name__ == "__main__":
