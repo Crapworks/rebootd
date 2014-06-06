@@ -10,7 +10,7 @@ This tool is pretty simple. To use it, you only need two things:
 This script will reboot your system! But only if all of the conditions are met:
 
 * you system has reached the maximum uptime (configurable)
-* the redis server is reachable
+* the redis server (configurable) is reachable
 * no other machine of the same cluster (configurable) is currently rebooting
 
 ### Why the hell should I use that?
@@ -42,6 +42,6 @@ After a successfull reboot (and the next run of the cronjob) it will remove itse
 }
 ```
 
-**group**: The cluster this node is a member of
-**week**: If your node is up for more than *n* weeks, it will reboot
-**redis**: Hostname/IP of your redis server
+* **group**: The cluster this node is a member of
+* **week**: If your node is up for more than *n* weeks, it will reboot
+* **redis**: Hostname/IP of your redis server
