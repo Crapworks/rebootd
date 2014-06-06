@@ -19,7 +19,7 @@ class RebootDaemonTest(unittest.TestCase):
         pass
 
     def testMain(self):
-        """ Testing the SafeTransport class """
+        """ Testing the main class functions """
 
         self.assertTrue(self.reboot_daemon._get_uptime() > 0)
         self.assertTrue(isinstance(self.reboot_daemon._time_to_reboot, bool))
