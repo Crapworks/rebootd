@@ -1,0 +1,12 @@
+Source: rebootd
+Section: misc
+Priority: extra
+Maintainer: Christian Eichelmann <christian.eichelmann@1und1.de>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+
+Package: rebootd
+Architecture: all
+Depends: python-argparse, python-redis
+Description: sequential rebooting of cluster nodes
+  sequential rebooting of cluster nodes
