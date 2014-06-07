@@ -24,9 +24,36 @@ else:
 __version__ = '0.2'
 
 
+class Config(dict):
+    """ loads the json configuration file """
+
+    config_values = ['cluster', 'reboot_after', 'redis']
+
+    def __init__(self, config_file):
+        dict.__init__(self)
+        configfile = os.path.join(os.path.dirname(__file__), config_file)
+        self.update(json.load(open(configfile), object_hook=self._string_decode_hook))
+        self._validate()
+
+    def _validate(self):
+        for cv in self.config_values:
+            if cv not in self.keys():
+                raise ValueError('Missing config key: %s' % (cv, ))
+
+    def _string_decode_hook(self, data):
+        rv = {}
+        for key, value in data.iteritems():
+            if isinstance(key, unicode):
+                key = key.encode('utf-8')
+            if isinstance(value, unicode):
+                value = value.encode('utf-8')
+            rv[key] = value
+        return rv
+
+
 class RebootDaemon(object):
     def __init__(self, config_file):
-        self.config = json.load(open(config_file))
+        self.config = Config(config_file)
         self.fqdn = socket.getfqdn()
         self.redis = redis.StrictRedis(host=self.config['redis'], port=6379, db=0)
 
@@ -39,11 +66,11 @@ class RebootDaemon(object):
     def _time_to_reboot(self):
         uptime = datetime.timedelta(seconds=self._get_uptime())
         logger.debug('system uptime: %s' % (uptime, ))
-        return uptime > datetime.timedelta(weeks=int(self.config['weeks']))
+        return uptime > datetime.timedelta(**self.config['reboot_after'])
 
     @property
     def reboot(self):
-        key = 'rebootd::%s' % (self.config['group'], )
+        key = 'rebootd::%s' % (self.config['cluster'], )
         logger.debug('using redis key %s in redis server %s' % (key, self.config['redis']))
         if self._time_to_reboot:
             self.redis.setnx(key, self.fqdn)

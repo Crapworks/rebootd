@@ -36,12 +36,15 @@ After a successfull reboot (and the next run of the cronjob) it will remove itse
 
 ```json
 {
-    "group": "mygroup",
-    "week": "1",
+    "cluster": "mycluster",
+    "reboot_after": {
+        "weeks": 2,
+        "days": 1
+    },
     "redis": "my.redis.server"
 }
 ```
 
-* **group**: The cluster this node is a member of
-* **week**: If your node is up for more than *n* weeks, it will reboot
+* **cluster**: The cluster this node is a member of
+* **reboot_after**: reboot the node after the specified uptime. For valid arguments, see [here](https://docs.python.org/2/library/datetime.html#datetime.timedelta).
 * **redis**: Hostname/IP of your redis server
