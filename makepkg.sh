@@ -10,6 +10,7 @@ TMPDIR=`mktemp -d -u`
 # adjust changelog
 DISTRIBUTION=$1
 VERSION=`./rebootd.py --version`
+echo $VERSION
 debchange --newversion ${VERSION} --distribution ${DISTRIBUTION} --force-distribution -m "released version ${VERSION} for ${DISTRIBUTION}"
 
 # create build environment
