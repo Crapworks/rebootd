@@ -24,7 +24,7 @@ else:
     logger = logging.getLogger('rebootd')
 
 
-__version__ = '0.4.1'
+__version__ = '0.5'
 
 
 class Config(dict):
@@ -41,10 +41,14 @@ class Config(dict):
     def _load_hooks(self, config):
         self['loaded_hooks'] = []
         for module_name, options in config.iteritems():
-            module = import_module('hooks.%s' % (module_name, ))
-            for obj_name, obj in getmembers(module):
-                if isclass(obj) and getattr(obj, 'hook_name', None) == module_name:
-                    self['loaded_hooks'].append(obj(**options))
+            try:
+                module = import_module('hooks.%s' % (module_name, ))
+            except ImportError as err:
+                logger.error('unable to load module %s: %s' % (module_name, err))
+            else:
+                for obj_name, obj in getmembers(module):
+                    if isclass(obj) and getattr(obj, 'hook_name', None) == module_name:
+                        self['loaded_hooks'].append(obj(**options))
 
     def _validate(self):
         for cv in self.config_values:
