@@ -24,7 +24,7 @@ else:
     logger = logging.getLogger('rebootd')
 
 
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 class Config(dict):
