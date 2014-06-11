@@ -9,6 +9,9 @@ import socket
 import argparse
 import datetime
 
+from inspect import getmembers
+from inspect import isclass
+from importlib import import_module
 
 import logging.config
 try:
@@ -21,7 +24,7 @@ else:
     logger = logging.getLogger('rebootd')
 
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 class Config(dict):
@@ -35,10 +38,21 @@ class Config(dict):
         self.update(json.load(open(configfile), object_hook=self._string_decode_hook))
         self._validate()
 
+    def _load_hooks(self, config):
+        self['loaded_hooks'] = []
+        for module_name, options in config.iteritems():
+            module = import_module('hooks.%s' % (module_name, ))
+            for obj_name, obj in getmembers(module):
+                if isclass(obj) and getattr(obj, 'hook_name', None) == module_name:
+                    self['loaded_hooks'].append(obj(**options))
+
     def _validate(self):
         for cv in self.config_values:
             if cv not in self.keys():
                 raise ValueError('Missing config key: %s' % (cv, ))
+
+        if 'hooks' in self.keys():
+            self._load_hooks(self['hooks'])
 
     def _string_decode_hook(self, data):
         rv = {}
@@ -90,7 +104,10 @@ def main():
     try:
         rebootd = RebootDaemon(args.config)
         if rebootd.reboot:
-            # possible pre-reboot hooks here
+            # run configured hooks
+            for hook in rebootd.config['loaded_hooks']:
+                logger.info('running hook %s...' % (hook.hook_name, ))
+                hook.trigger(rebootd.fqdn)
             logger.info('maximum uptime reached! rebooting')
             os.system('reboot')
         else:
