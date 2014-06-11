@@ -2,7 +2,7 @@
     "cluster": "mycluster",
     "reboot_after": {
         "weeks": 2,
-        "days": 1,
+        "days": 1
     },
     "redis": "my.redis.server"
 }
