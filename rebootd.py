@@ -113,7 +113,7 @@ def main():
                 logger.info('running hook %s...' % (hook.hook_name, ))
                 hook.trigger(rebootd.fqdn)
             logger.info('maximum uptime reached! rebooting')
-            os.system('reboot')
+            os.system('/sbin/reboot')
         else:
             logger.info('system should not be rebooted yet')
     except redis.exceptions.ConnectionError as err:
