@@ -1,4 +1,5 @@
 argparse>=1.2.1
 redis
+importlib
 nose>=1.2.1
 nosexcover>=1.0.7
