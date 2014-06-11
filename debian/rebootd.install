@@ -1,3 +1,4 @@
 config.json /opt/rebootd
 logging.ini /opt/rebootd
 rebootd.py /opt/rebootd
+hooks /opt/rebootd
