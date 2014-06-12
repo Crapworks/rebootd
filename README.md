@@ -41,10 +41,22 @@ After a successfull reboot (and the next run of the cronjob) it will remove itse
         "weeks": 2,
         "days": 1
     },
+    "hooks": {
+        "thruk": {
+            "url": "http://my.thruk.url/cgi-bin/cmd.cgi",
+            "username": "foo",
+            "password": "bar"
+        }
+    },
     "redis": "my.redis.server"
 }
 ```
 
 * **cluster**: The cluster this node is a member of
 * **reboot_after**: reboot the node after the specified uptime. For valid arguments, see [here](https://docs.python.org/2/library/datetime.html#datetime.timedelta).
+* **hooks**: hooks are placed in the ```hooks``` directory and get executed before rebooting
 * **redis**: Hostname/IP of your redis server
+
+#### More about hooks
+
+Hooks are python scripts, residing in the ```hooks``` directory, that are triggered before actually rebooting the system. If you want to know how to implement one, have a look at the example ```thruk.py```. This one is used to trigger a downtime of 30 minutes to nagios/icinga via the [Thruk](http://thruk.org/) webinterface. I'm sure this is quite the same for the original nagios/icinga frontend. Patches and new hooks are very welcome :)
