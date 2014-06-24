@@ -24,7 +24,7 @@ else:
     logger = logging.getLogger('rebootd')
 
 
-__version__ = '0.5.1'
+__version__ = '0.6.0'
 
 
 class Config(dict):
@@ -105,6 +105,9 @@ def main():
     parser.add_argument("-c", "--config", help="path to the configuration file", default="config.json")
     args = parser.parse_args()
 
+    warning_time = 5
+    warning_message = ' rebootd is rebooting this system - save your work and logout '
+
     try:
         rebootd = RebootDaemon(args.config)
         if rebootd.reboot:
@@ -113,7 +116,7 @@ def main():
                 logger.info('running hook %s...' % (hook.hook_name, ))
                 hook.trigger(rebootd.fqdn)
             logger.info('maximum uptime reached! rebooting')
-            os.system('/sbin/reboot')
+            os.system('/sbin/sudo shutdown -r %d "%s"' % (warning_time, warning_message))
         else:
             logger.info('system should not be rebooted yet')
     except redis.exceptions.ConnectionError as err:
